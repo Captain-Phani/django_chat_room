@@ -11,6 +11,16 @@
 {% block content %}
 <body>
     <h1>Home Page</h1>
+    <div>
+        <p> Below rooms are available</p>
+        <div>
+            {% for room in rooms %}
+            <div>
+                <p>{{room.id}}.{{room.room_name}}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 {% endblock %}
 
@@ -22,3 +32,4 @@
 <!--1. extend is used to inherit the properties of main.html-->
 <!--2. block content is used to get the content from main.html-->
 <!--3. endblock is used to end the extraction of content from main.html
+By using {% for elem in list %} to loop elements and {% endfor %} to stop for loop
