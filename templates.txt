@@ -1,0 +1,22 @@
+
+1. Templates directory is created to contain html code for different components
+2. To make sure templates are added we need to configure in settings.py
+3.configure in settings.py like below mentioned
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            BASE_DIR / 'templates'
+
+        ],
+
+4. django provides inheritance for html pages.
+5. for example we can include content from one different html page to another by using `{% include 'htmlpage.html' %}`
+    in desired html page
+6. we can wrap different html pages in one main html page by using
+
+{% block content %}
+
+{% endblock %}
+
+for reference see main.html

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Navbar</title>
+</head>
+<body>
+    <a href="{% url 'home' %}">
+        <h1 style="text-align:center">Logo</h1>
+    </a>
+</body>
+</html>
+
+
+
+<!--The {% url 'home' %} tag tells Django to look up the URL pattern named home.-->
+<!--Django finds the URL pattern path('home/', views.home, name='home') in base/urls.py.-->
+<!--Django generates the URL /home/ and inserts it into the href attribute of the <a> tag.-->
+<!--When you click the logo, it navigates to /home/, regardless of the current URL.-->
