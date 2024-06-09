@@ -8,13 +8,19 @@ rooms = [
 ]
 def home(request):
 
-    return render(request, 'home.html', {'rooms': rooms}) # passing rooms list into template
+    return render(request, 'base/home.html', {'rooms': rooms}) # passing rooms list into template
     # return HttpResponse('Home')
 
 
-def room(request):
+def room(request, pk):
 
-    return render(request, 'room.html')
+    room = None
+    for elem in rooms:
+        if elem['id'] == int(pk):
+            room = elem
+
+    context = {'room': room}
+    return render(request, 'base/room.html', context)
     # return HttpResponse('Room')
 
 

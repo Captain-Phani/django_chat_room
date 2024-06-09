@@ -20,3 +20,16 @@ TEMPLATES = [
 {% endblock %}
 
 for reference see main.html
+
+7. Generally in real time we are gonna separate templates which are used across the whole project and templates
+   which are app-specific(templates that belongs to particular app)
+
+8. create a templates directory in app and which create a subdirectory with app name.Follow the below structure
+
+    templates
+        |
+        |
+        |------subdirectory with app name(base)
+                        |
+                        |
+                        |------html pages
