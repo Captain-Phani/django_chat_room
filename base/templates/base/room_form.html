@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Room Form</title>
+</head>
+{% extends 'main.html' %}
+<body>
+    {% block content %}
+    <form method="post" action="">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Submit">
+    </form>
+    {% endblock %}
+</body>
+</html>
+
+
+<!--Note:-->
+<!--We need to create rooms dynamically instead of using admin panel-->
+<!--so that's we we need to build form to create and update rooms-->
+<!--this templates is used for creating and updating templates-->
+<!--action in form tag ensures that form data submitted to particular url-->
+<!--csrf token is used to prevent any malicious things like-->
+<!--12th line is using form from forms.py and wrapping each field with paragraph tag-->

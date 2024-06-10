@@ -12,14 +12,23 @@
 <body>
     <h1>Home Page</h1>
     <div>
+
+        <p><a href="{% url 'create_room' %}">Create New room</a></p>
+
         <p> Below rooms are available</p>
         <div>
             {% for room in rooms %}
             <div>
-                <p>{{room.id}}.<a href="/room/{{room.id}}">{{room.room_name}}</p>
+                <a href="{% url 'update_room' room.id %}">Edit Room</a>
+                <a href="{% url 'delete_room' room.id %}">Delete Room</a>
+                <span>Created by @{{room.host.username}}</span>
+                <p>{{room.id}}.<a href="/room/{{room.id}}">{{room.room}}</a></p>
+                <small>Topic: {{room.topic.topic_name}}</small>
             </div>
+             <hr>
             {% endfor %}
         </div>
+
     </div>
 </body>
 {% endblock %}
@@ -35,3 +44,5 @@
 By using {% for elem in list %} to loop elements and {% endfor %} to stop for loop
 In 19 line we can use use {% url 'room' %} so that we don't have to change url eveytime if there is a change
 in base.urls
+
+In line 22 update_room is added along with its id
