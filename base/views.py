@@ -1,7 +1,9 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import RoomForm
+from base.forms import RoomForm
 from .models import Room, Message, Topic
+
+
 # rooms = [
 #     {'id': 1, 'room_name': 'Python'},
 #     {'id': 2, 'room_name': 'JavaScript'},
@@ -12,9 +14,21 @@ from .models import Room, Message, Topic
 def home(request):
     # return render(request, 'base/home.html', {'rooms': rooms}) # passing rooms list into template
     # return HttpResponse('Home')
+    # q = request.GET.get('q') # fetches parameter
 
+    q = request. GET.get('q') if request.GET.get('q') !=  None else ''
+    # Above condition if q is not none it returns q else it returns empty string
+
+    # filters based on topic name with. first topic- foreign key second topic- navigates throgh foreign key and filters
+    # name
+    # filtered_rooms = Room.objects.filter(topic__topic_name=q)
+
+    # icontains - it is case insensitive
+    # contains - case sensitive
+    filtered_rooms = Room.objects.filter(topic__topic_name__icontains=q)
     rooms = Room.objects.all()
-    context = {'rooms': rooms}
+    topic = Topic.objects.all()
+    context = {'rooms': filtered_rooms, 'topic': topic}
     return render(request, 'base/home.html', context)
 
 
@@ -50,10 +64,10 @@ def create_room(request):
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
 
-def update_room(request,pk):
 
+def update_room(request, pk):
     room = Room.objects.get(pk=pk)
-    form = RoomForm(instance=room)    # creating an instance of form
+    form = RoomForm(instance=room)  # creating an instance of form
     if request.method == 'POST':
 
         # we are sending the data to RoomForm to process for that particular instance
@@ -63,12 +77,11 @@ def update_room(request,pk):
             form.save()
             return redirect('home')
 
-    context= {'form': form}
+    context = {'form': form}
     return render(request, 'base/room_form.html', context)
 
 
 def delete_room(request, pk):
-
     room = Room.objects.get(pk=pk)
 
     if request.method == 'POST':

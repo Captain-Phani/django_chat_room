@@ -5,6 +5,13 @@
     <title>Navbar</title>
 </head>
 <body>
+    <div>
+    <form method="GET" action="{% url 'home' %}">
+        <input type="text" name="q" />
+        <label style="font-weight:bold">Search</label>
+
+    </form>
+    </div>
     <a href="{% url 'home' %}">
         <h1 style="text-align:center">Logo</h1>
     </a>
