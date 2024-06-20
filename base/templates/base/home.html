@@ -40,14 +40,18 @@
                  <p> Below rooms are available</p>
                 {% for room in rooms %}
                 <div>
-                    <a href="{% url 'update_room' room.id %}">Edit Room</a>
-                    <a href="{% url 'delete_room' room.id %}">Delete Room</a>
+                    {% if request.user == room.host %}
+                        <a href="{% url 'update_room' room.id %}">Edit Room</a>
+                        <a href="{% url 'delete_room' room.id %}">Delete Room</a>
+                    {% endif %}
                     <span>Created by @{{room.host.username}}</span>
                     <p>{{room.id}}.<a href="/room/{{room.id}}">{{room.room}}</a></p>
                     <small>Topic: {{room.topic.topic_name}}</small>
                 </div>
+
                  <hr>
                 {% endfor %}
+                <div>Total Rooms available: {{room_count}}</div>
         </div>
 
     </div>
