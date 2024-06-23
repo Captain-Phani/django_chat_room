@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 from django.shortcuts import render, redirect
@@ -24,6 +25,7 @@ def loginPage(request):
     :param request:
     :return:
     """
+    page = 'login'
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -36,7 +38,7 @@ def loginPage(request):
 
         except User.DoesNotExist:
             messages.error(request, "User does not exit")  # if object does not exist shows this error msg
-            return render(request, 'base/login_form.html')
+            return render(request, 'base/login_form.html', {'page':page})
 
     # below step is to authenticate provided username and password and returns user object or else error
         user = authenticate(request, username=username, password=password)
@@ -56,7 +58,8 @@ def loginPage(request):
         print(request.GET)
         messages.info(request, "Login required to access this page")
 
-    return render(request, 'base/login_form.html')
+
+    return render(request, 'base/login_form.html',{'page':page})
 
 
 def logoutPage(request):
@@ -68,6 +71,31 @@ def logoutPage(request):
 
     logout(request) # logout function will delete current user session from browser session storage
     return redirect('home')
+
+
+def registerUser(request):
+    """
+    Method to register an user by using usercreationform which is provided
+
+    by django itself
+    :param request:
+    :return:
+    """
+    userform = UserCreationForm()
+    if request.method == 'POST':
+        userform = UserCreationForm(request.POST)
+        if userform.is_valid():
+            user = userform.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'An error occured during registration')
+
+    form = userform
+    return render(request, 'base/login_form.html', {'form': form})
+
 
 def home(request):
     # return render(request, 'base/home.html', {'rooms': rooms}) # passing rooms list into template
@@ -173,6 +201,7 @@ def delete_room(request, pk):
         return redirect('home')
     context = {'obj': room}
     return render(request, 'base/del_room.html', context)
+
 
 
 # Note for next_url and next in loginpage:

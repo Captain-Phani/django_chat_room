@@ -26,7 +26,7 @@ class Room(models.Model):
         return self.room
 
     class Meta:
-        ordering = ['-updated_at','-created_at']  # if we did not mention '-' symbol it will show updated rooms and then
+        ordering = ['-updated_at','-created_at'] # if we did not mention '-' symbol it will show updated rooms and then
                                             # created rooms
 
 

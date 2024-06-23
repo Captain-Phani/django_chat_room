@@ -6,11 +6,13 @@
 </head>
 <body>
     <div>
-    <form method="GET" action="{% url 'home' %}">
-        <input type="text" name="q" />
-        <label style="font-weight:bold">Search</label>
+        {% if request.user.is_authenticated %}
+            <form method="GET" action="{% url 'home' %}">
+                <input type="text" name="q" />
+                <label style="font-weight:bold">Search</label>
 
-    </form>
+            </form>
+        {% endif %}
     </div>
     <div>
         {% if request.user.is_authenticated %}
