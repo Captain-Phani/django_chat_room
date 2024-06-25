@@ -38,9 +38,9 @@ def loginPage(request):
 
         except User.DoesNotExist:
             messages.error(request, "User does not exit")  # if object does not exist shows this error msg
-            return render(request, 'base/login_form.html', {'page':page})
+            return render(request, 'base/login_form.html', {'page': page})
 
-    # below step is to authenticate provided username and password and returns user object or else error
+        # below step is to authenticate provided username and password and returns user object or else error
         user = authenticate(request, username=username, password=password)
         print(user)
 
@@ -54,12 +54,10 @@ def loginPage(request):
             messages.error(request, "Username or password does not match")
 
     if 'next' in request.GET:
-
         print(request.GET)
         messages.info(request, "Login required to access this page")
 
-
-    return render(request, 'base/login_form.html',{'page':page})
+    return render(request, 'base/login_form.html', {'page': page})
 
 
 def logoutPage(request):
@@ -69,7 +67,7 @@ def logoutPage(request):
     :return:
     """
 
-    logout(request) # logout function will delete current user session from browser session storage
+    logout(request)  # logout function will delete current user session from browser session storage
     return redirect('home')
 
 
@@ -138,7 +136,25 @@ def room(request, pk):
 
     room = Room.objects.get(pk=pk)
 
-    context = {'room': room}
+    # To fetch the messages under a particular room below is used
+    # room- room accessed from above line
+    # message -  message model name
+    # _set.all() -  fetches all messages
+
+    room_messages = room.message_set.all()
+    participants= room.participants.all() # gets all participants
+    print(participants)
+    if request.method == 'POST':
+        message = Message.objects.create(
+            user=request.user,
+            room=room,
+            message=request.POST.get('body')
+
+        )
+        room.participants.add(request.user)
+        return redirect('room', pk=room.id)
+
+    context = {'room': room, 'room_messages': room_messages,'participants':participants}
     return render(request, 'base/room.html', context)
     # return HttpResponse('Room')
 
@@ -168,6 +184,7 @@ def create_room(request):
 
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
+
 
 @login_required(login_url='loginPage')
 def update_room(request, pk):
@@ -202,6 +219,19 @@ def delete_room(request, pk):
     context = {'obj': room}
     return render(request, 'base/del_room.html', context)
 
+@login_required(login_url='loginPage')
+def delete_message(request, pk):
+    message = Message.objects.get(pk=pk)
+    # room = Room.Objects.get(pk=pk)
+    if request.user != message.user:
+        return HttpResponse(f' you are not allowed here')
+
+    if request.method == 'POST':
+        message.delete()
+        return redirect('home')
+    context = {'obj': message}
+    return render(request, 'base/del_room.html', context)
+
 
 
 # Note for next_url and next in loginpage:
@@ -224,7 +254,7 @@ def delete_room(request, pk):
 # without being redirected), it defaults to 'home'. This means that after a successful login, the user will be redirected to the home page.
 
 
-#---------------------------------------------------------------
+# ---------------------------------------------------------------
 # Now we need to restrict users to modify rooms they created. they should not see the delete and edit options
 
 # for ex: if user chat is logged in he is allowed to modify the rooms he created other than that  he is not allowed
