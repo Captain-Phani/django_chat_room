@@ -11,9 +11,6 @@
 
     {% include 'navbar.html' %}
 
-    {% if request.user.is_authenticated %}
-        <h3>Welcome {{request.user}}</h3>
-    {% endif %}
     {% block content %}
 
     {% endblock %}

@@ -83,7 +83,7 @@ def registerUser(request):
     if request.method == 'POST':
         userform = UserCreationForm(request.POST)
         if userform.is_valid():
-            user = userform.save(commit=False)
+            user = userform.save(commit=False)  # Does not store in db but will create an instance
             user.username = user.username.lower()
             user.save()
             login(request, user)
@@ -119,9 +119,13 @@ def home(request):
 
     # Q Lookups are used when we need to combine two or more logical operations
     room_count = filtered_rooms.count()
+    # activity_messages=Message.objects.all()
+
+    #  Fetching messages based on room
+    activity_messages = Message.objects.filter(Q(room__topic__topic_name__icontains=q))
     rooms = Room.objects.all()
     topic = Topic.objects.all()
-    context = {'rooms': filtered_rooms, 'topic': topic, 'room_count': room_count}
+    context = {'room': filtered_rooms, 'topic': topic, 'room_count': room_count, 'user_messages':activity_messages}
     return render(request, 'base/home.html', context)
 
 
@@ -140,9 +144,13 @@ def room(request, pk):
     # room- room accessed from above line
     # message -  message model name
     # _set.all() -  fetches all messages
+    # if we did not mention any name for relation keys like foreign key, many to many relationship
+    # django itself create an unique name to access the elements of those relations
+    # by default it will create a name with model name followed by _set
+    # Sometimes it migh lead to name conflict, to  prevent this related_name is used
 
     room_messages = room.message_set.all()
-    participants= room.participants.all() # gets all participants
+    participants = room.participants.all() # gets all participants
     print(participants)
     if request.method == 'POST':
         message = Message.objects.create(
@@ -158,6 +166,24 @@ def room(request, pk):
     return render(request, 'base/room.html', context)
     # return HttpResponse('Room')
 
+def userProfile(request, pk):
+    """
+    userprofile method defines logic to process userprofile
+    :param request:
+    :param pk:
+    :return:
+    """
+    user = User.objects.get(pk = pk)
+    print(user.username)
+    rooms = user.room_set.all()
+    print(rooms)
+    room_messages = user.message_set.all()
+    topics = Topic.objects.all()
+    print(topics)
+    context = {'user': user, 'room': rooms, 'room_message': room_messages,
+              'topic': topics}
+    print(user)
+    return render(request, 'base/userProfile.html', context)
 
 @login_required(login_url='loginPage')
 def create_room(request):
@@ -172,7 +198,7 @@ def create_room(request):
     """
     form = RoomForm()
     if request.method == 'POST':
-        # print(request.POST) # IT WILL PRING QUERY DICT ALONG WITH CSRF TOKEN AND DATA
+        # print(request.POST) # IT WILL PRINT QUERY DICT ALONG WITH CSRF TOKEN AND DATA
         form = RoomForm(request.POST)
         print(form)
         if form.is_valid():
@@ -221,6 +247,13 @@ def delete_room(request, pk):
 
 @login_required(login_url='loginPage')
 def delete_message(request, pk):
+
+    """
+    Function to handle deletion of messages
+    :param request:
+    :param pk:
+    :return:
+    """
     message = Message.objects.get(pk=pk)
     # room = Room.Objects.get(pk=pk)
     if request.user != message.user:

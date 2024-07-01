@@ -8,7 +8,7 @@
     <style>
     .container{
         display:grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 3fr 1fr;
      }
     </style>
 </head>
@@ -20,39 +20,56 @@
 
     <div class="container">
 
-        <div>
-            <h3>Topics are mentioned below</h3>
-            <hr>
-            <div style="margin:10px">
-                <a href = "{% url 'home' %}">All</a>
-            </div>
-            {% for topic in topic %}
-                <div style="margin:10px">
-                    <a href = "{% url 'home' %}?q={{topic.topic_name}}">{{topic.topic_name}}</a>
-                </div>
-            {% endfor %}
-        </div>
-
+<!--        <div>-->
+<!--            <h3>Topics are mentioned below</h3>-->
+<!--            <hr>-->
+<!--            <div style="margin:10px">-->
+<!--                <a href = "{% url 'home' %}">All</a>-->
+<!--            </div>-->
+<!--            {% for topic in topic %}-->
+<!--                <div style="margin:10px">-->
+<!--                    <a href = "{% url 'home' %}?q={{topic.topic_name}}">{{topic.topic_name}}</a>-->
+<!--                </div>-->
+<!--            {% endfor %}-->
+<!--        </div>-->
+            {% include 'base/topics.html' %}
 
         <div>
                  <p><a href="{% url 'create_room' %}">Create New room</a></p>
 
                  <p> Below rooms are available</p>
-                {% for room in rooms %}
-                <div>
-                    {% if request.user == room.host %}
-                        <a href="{% url 'update_room' room.id %}">Edit Room</a>
-                        <a href="{% url 'delete_room' room.id %}">Delete Room</a>
-                    {% endif %}
-                    <span>Created by @{{room.host.username}}</span>
-                    <p>{{room.id}}.<a href="/room/{{room.id}}">{{room.room}}</a></p>
-                    <small>Topic: {{room.topic.topic_name}}</small>
-                </div>
+<!--                {% for room in rooms %}-->
+<!--                <div>-->
+<!--                    {% if request.user == room.host %}-->
+<!--                        <a href="{% url 'update_room' room.id %}">Edit Room</a>-->
+<!--                        <a href="{% url 'delete_room' room.id %}">Delete Room</a>-->
+<!--                    {% endif %}-->
+<!--                    <span>Created by @{{room.host.username}}</span>-->
+<!--                    <p>{{room.id}}.<a href="/room/{{room.id}}">{{room.room}}</a></p>-->
+<!--                    <small>Topic: {{room.topic.topic_name}}</small>-->
+<!--                </div>-->
 
-                 <hr>
-                {% endfor %}
+<!--                 <hr>-->
+<!--                {% endfor %}-->
+                {% include 'base/room_activity.html' %}
                 <div>Total Rooms available: {{room_count}}</div>
         </div>
+
+        <div>
+<!--            <h3>Activity</h3>-->
+<!--            {% for message in user_messages %}-->
+<!--                <div>-->
+<!--                    <small>@ {{message.user.username}} {{message.created_at|timesince}} ago</small>-->
+<!--                    <p>{{message.user.username}} replied to {{message.room.room}}</p>-->
+<!--                    <p>{{message}}</p>-->
+<!--                    {% if request.user == message.user %}-->
+<!--                        <a href="{% url 'delete_msg' message.id %}">Delete</a>-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+<!--            {% endfor %}-->
+                {% include 'base/activity_feed.html' %}
+        </div>
+
 
     </div>
 </body>
@@ -71,3 +88,8 @@ In 19 line we can use use {% url 'room' %} so that we don't have to change url e
 in base.urls
 
 In line 22 update_room is added along with its id
+
+from line 58
+We write code to display that particular room activity . For example if we click web development
+it displays all rooms regarding web development and in right side it displays activity going on in that
+web development topic

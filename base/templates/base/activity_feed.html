@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activity Feed</title>
+</head>
+<body>
+    <h3>Activity</h3>
+            {% for message in user_messages %}
+                <div>
+                    <small> <a href="{% url 'user_profile' message.user.id %}">@ {{message.user.username}}-{{message.user.id}}</a> {{message.created_at|timesince}} ago</small>
+                    <p>{{message.user.username}} replied to {{message.room.room}}</p>
+                    <p>{{message}}</p>
+                    {% if request.user == message.user %}
+                        <a href="{% url 'delete_msg' message.user.id %}">Delete</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+</body>
+</html>
+

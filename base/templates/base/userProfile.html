@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UserProfile</title>
+
+    <style>
+        .page-container{
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+        }
+    </style>
+</head>
+<body>
+{% extends 'main.html' %}
+
+{% block content %}
+    <div class="page-container">
+
+        <div>
+            <h4>User Profile </h4>
+
+
+            <h3>{{user}}</h3>
+
+
+            {% include 'base/topics.html' %}
+
+        </div>
+
+
+        <div>
+            <p> Rooms created by {{user.username}}</p>
+
+            {% include 'base/room_activity.html' %}
+
+        </div>
+
+        <div>
+            <p>Messages by  {{user.username}}</p>
+            {% include 'base/room_activity.html' %}
+        </div>
+
+    </div>
+{% endblock %}
+</body>
+</html>
