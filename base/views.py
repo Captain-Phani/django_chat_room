@@ -179,8 +179,8 @@ def userProfile(request, pk):
     print(rooms)
     room_messages = user.message_set.all()
     topics = Topic.objects.all()
-    print(topics)
-    context = {'user': user, 'room': rooms, 'room_message': room_messages,
+    print(room_messages)
+    context = {'user': user, 'room': rooms, 'user_messages': room_messages,
               'topic': topics}
     print(user)
     return render(request, 'base/userProfile.html', context)
